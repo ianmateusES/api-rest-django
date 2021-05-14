@@ -1,0 +1,30 @@
+version: '3'
+
+services: 
+  database:
+    image: mysql:latest
+    container_name: db-publice_se
+    volumes: 
+      - ./mysql:/docker-entrypoint-initdb.d
+    environment: 
+      - MYSQL_ROOT_PASSWORD=123456
+    ports: 
+      - 3306:3306
+    networks: 
+      - db-net
+  
+  django:
+    build: ./backend
+    container_name: django-api
+    volumes: 
+      - ./backend:/home/api
+    ports: 
+      - 8000:8000
+    networks: 
+      - db-net
+    depends_on: 
+      - database
+    
+networks: 
+  db-net:
+    driver: bridge
